@@ -1,8 +1,30 @@
 [build-system]
-requires = ["flit_core >=3.2,<4"]
-build-backend = "flit_core.buildapi"
+requires = ["setuptools >= 61.0", "setuptools-scm"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "lumache"
-authors = [{name = "Graziella", email = "graziella@lumache"}]
-dynamic = ["version", "description"]
+name = "seq_consensus"
+description = "Consensus sequences from multiple alignments"
+authors = [
+  { name = "Markus Schlegel", email = "markschl19@gmail.com" },
+]
+license = { text = "MIT" }
+readme = "README.md"
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+requires-python = ">=3.5"
+dependencies = ["numpy>=1.9.2"]
+dynamic = ["version"]
+scripts = { cons_tool = "seq_consensus.cons_tool:main" }
+
+[project.optional-dependencies]
+cli = ["biopython"]
+
+[project.urls]
+"Homepage" = "http://github.com/markschl/seq_consensus"
+"Bug Tracker" = "http://github.com/markschl/seq_consensus/issues"

@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'seq_consensus'
+copyright = '2023, Markus Schlegel'
+author = 'Markus Schlegel'
 
 release = '0.1'
 version = '0.1.0'
