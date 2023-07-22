@@ -1,7 +1,9 @@
 API
 ===
 
-.. autosummary::
-   :toctree: generated
+.. currentmodule:: seq_consensus
 
-   seq_consensus
+.. autofunction:: consensus
+
+.. autoclass:: AlignmentFrequencies
+   :members:
