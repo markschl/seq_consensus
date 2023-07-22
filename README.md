@@ -1,15 +1,24 @@
 # Consensus sequences from multiple alignments
 
-This is a simple Python 3 library focused on calculating consensus sequences. Ambiguous letters in the input are handled as well. *Numpy* is used under the hood. Currently, DNA/RNA sequences are supported.
+[![Python package](https://github.com/markschl/seq_consensus/actions/workflows/validate.yaml/badge.svg)](https://github.com/markschl/seq_consensus/actions/workflows/validate.yaml)
+[![Documentation Status](https://readthedocs.org/projects/seq-consensus/badge/?version=latest)](https://seq-consensus.readthedocs.io/en/latest/?badge=latest)
+
+*seq_consensus* is a simple Python 3 library focused on calculating consensus sequences. Ambiguous letters in the input are handled as well. *Numpy* is used under the hood. Currently, DNA/RNA sequences are supported.
 
 The package additionally offers a small utility (`cons_tool`), which allows calculating consensus sequences on the commandline (see below).
 
 ## How is the consensus calculated?
 
 The method is identical with the approach by [Geneious](https://assets.geneious.com/manual/2022.0/static/GeneiousManualse45.html) and very similar to the function [*ConsensusSequence*](https://rdrr.io/bioc/DECIPHER/man/ConsensusSequence.html) from the [`DECIPHER` R package](http://www2.decipher.codes) (options a little different).
+The [API documentation](https://seq-consensus.readthedocs.io/en/latest/api.html#seq_consensus.consensus)
+contains some more description.
 
+## Documentation
 
-## Example
+The complete documentation [is found here](https://seq-consensus.readthedocs.io/en/latest/usage.html).
+Below some small examples for demonstration:
+
+### Usage example
 
 ```python
 from seq_consensus import consensus
@@ -29,7 +38,7 @@ This returns:
 'AT-CC'
 ```
 
-## Commandline tool
+### Commandline tool examle
 
 The script `cons_tool` allows using the same functionality from the commandline.
 An especially useful feature is the possibility to group sequences
@@ -39,7 +48,7 @@ by arbitrary regular expression pattern matched in the sequence headers:
 cons_tool -k 'p:\w+' input.fasta
 ```
 
-Example output (if taxonomic annotations present in header):
+Example output (given that taxonomic annotations are present in the headers):
 
 ```
 >p:Evosea consensus (n=124)
