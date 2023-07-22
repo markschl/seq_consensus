@@ -138,8 +138,11 @@ We use `seqtool <https://github.com/markschl/seqtool>`_ (`st` command) for filte
 Some explanation regarding the commandline arguments: '-e '.' -T rna' tells the
 tool about end gaps and the molecule type. '-c 0.05' suppresses the output of
 columns with very few non-gap columns (requires at least 5% non-gap columns).
-The '-k' and '-H' options define the regex pattern matching for extracting and
-displaying the taxonomic ranks used for grouping.
+The '-k' option defines the regex pattern that matches the taxonomic ranks
+in the sequence header (used for grouping), and the '-H' option defines, how
+the FASTA headers of the consensus sequences are composed. '\\g<1>' references
+the first regex group (pattern in parentheses), thus making sure that
+'Opisthokonta' does not appear in the headers.
 
 The following screenshot from the Geneious software shows the output
 (additionally reordered using the FastTree plugin):

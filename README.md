@@ -5,17 +5,20 @@
 
 *seq_consensus* is a simple Python 3 library focused on calculating consensus sequences. Ambiguous letters in the input are handled as well. *Numpy* is used under the hood. Currently, DNA/RNA sequences are supported.
 
-The package additionally offers a small utility (`cons_tool`), which allows calculating consensus sequences on the commandline (see below).
+The package additionally offers a small utility
+([`cons_tool`](https://seq-consensus.readthedocs.io/en/latest/usage.html#commandline-tool)),
+which allows calculating consensus sequences on the commandline.
 
 ## How is the consensus calculated?
 
 The method is identical with the approach by [Geneious](https://assets.geneious.com/manual/2022.0/static/GeneiousManualse45.html) and very similar to the function [*ConsensusSequence*](https://rdrr.io/bioc/DECIPHER/man/ConsensusSequence.html) from the [`DECIPHER` R package](http://www2.decipher.codes) (options a little different).
-The [API documentation](https://seq-consensus.readthedocs.io/en/latest/api.html#seq_consensus.consensus)
-contains some more description.
+The API documentation contains
+[some more description](https://seq-consensus.readthedocs.io/en/latest/api.html#seq_consensus.consensus).
 
 ## Documentation
 
-The complete documentation [is found here](https://seq-consensus.readthedocs.io/en/latest/usage.html).
+The complete user guide [is found here](https://seq-consensus.readthedocs.io/en/latest/usage.html)
+and the [API is documented here](https://seq-consensus.readthedocs.io/en/latest/api.html).
 Below some small examples for demonstration:
 
 ### Usage example
