@@ -1,10 +1,11 @@
 [build-system]
-requires = ["setuptools >= 61.0", "setuptools-scm"]
+requires = ["setuptools >= 61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "seq_consensus"
 description = "Consensus sequences from multiple alignments"
+version = "0.1.0"
 authors = [
   { name = "Markus Schlegel", email = "markschl19@gmail.com" },
 ]
@@ -19,7 +20,6 @@ classifiers = [
 ]
 requires-python = ">=3.5"
 dependencies = ["numpy>=1.9.2"]
-dynamic = ["version"]
 scripts = { cons_tool = "seq_consensus.cons_tool:main" }
 
 [project.optional-dependencies]

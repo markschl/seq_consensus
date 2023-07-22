@@ -3,35 +3,36 @@ import numpy as np
 
 
 IUPAC_map = {
-    'A': 'A',
-    'C': 'C',
-    'G': 'G',
-    'T': 'T',
-    'R': 'AG',
-    'Y': 'CT',
-    'S': 'CG',
-    'W': 'AT',
-    'K': 'GT',
-    'M': 'AC',
-    'B': 'CGT',
-    'D': 'AGT',
-    'H': 'ACT',
-    'V': 'ACG',
-    'N': 'ACGT'
+    "A": "A",
+    "C": "C",
+    "G": "G",
+    "T": "T",
+    "R": "AG",
+    "Y": "CT",
+    "S": "CG",
+    "W": "AT",
+    "K": "GT",
+    "M": "AC",
+    "B": "CGT",
+    "D": "AGT",
+    "H": "ACT",
+    "V": "ACG",
+    "N": "ACGT",
 }
 
 
 def consensus(
-        sequences: Iterable[str],
-        threshold: float = 0,
-        alphabet_map: Mapping[str, str] = IUPAC_map,
-        free_endgaps: bool = True,
-        strip_gaps: bool = False,
-        gap_char: str = '-',
-        end_gap_char: str = '-',
-        gap_char_out: str = '-',
-        end_gap_char_out: str = '-',
-        maybe_gap_char: str = '?'):
+    sequences: Iterable[str],
+    threshold: float = 0,
+    alphabet_map: Mapping[str, str] = IUPAC_map,
+    free_endgaps: bool = True,
+    strip_gaps: bool = False,
+    gap_char: str = "-",
+    end_gap_char: str = "-",
+    gap_char_out: str = "-",
+    end_gap_char_out: str = "-",
+    maybe_gap_char: str = "?",
+):
     """
     Calculates the consensus sequence from a multiple alignment, represented by
     an iterable of same-length strings. By default, DNA is assumed (sequences
@@ -43,15 +44,15 @@ def consensus(
     (with frequency 1/N) to the letter frequency.
     For example, the DNA ambiguity "Y" contributes half to "A" and half to "T".
 
-    The behaviour of this function is the same as in the
-    `Geneious <https://assets.geneious.com/manual/2022.0/static/GeneiousManualse45.html>`
-    software, as well as the
-    `DECIPHER R package <http://www2.decipher.codes/index.html>`
-    (although DECIPHER defines the threshold in a complementary way:
-    1 - threshold).
+    The behaviour of this function is the same as in the Geneious software
+    and very similar to the DECIPHER R package.
+    Details at
+    https://assets.geneious.com/manual/2022.0/static/GeneiousManualse45.html
+    and
+    http://www2.decipher.codes/index.html
 
     Args:
-        sequences: (optional) iterable str (expects equal sequence lengths,
+        sequences (optional): iterable str (expects equal sequence lengths,
             will fail otherwise)
         threshold: Number between 0 and 1 indicating the proportion of all
             sequences that need the given letter in a column in order to be
@@ -95,30 +96,34 @@ def consensus(
     Returns (str):
         The consensus sequence
     """
-    freqs = AlignmentFrequencies(sequences,
-                                 alphabet_map=alphabet_map,
-                                 free_endgaps=free_endgaps,
-                                 gap_char=gap_char,
-                                 end_gap_char=end_gap_char)
-    return freqs.consensus(threshold=threshold,
-                           strip_gaps=strip_gaps,
-                           gap_char_out=gap_char_out,
-                           end_gap_char_out=end_gap_char_out,
-                           maybe_gap_char=maybe_gap_char)
+    freqs = AlignmentFrequencies(
+        sequences,
+        alphabet_map=alphabet_map,
+        free_endgaps=free_endgaps,
+        gap_char=gap_char,
+        end_gap_char=end_gap_char,
+    )
+    return freqs.consensus(
+        threshold=threshold,
+        strip_gaps=strip_gaps,
+        gap_char_out=gap_char_out,
+        end_gap_char_out=end_gap_char_out,
+        maybe_gap_char=maybe_gap_char,
+    )
 
 
 class AlignmentFrequencies(object):
     """
     This object holds column-wise letter frequencies, which are obtained from
-    a multiple sequence alignment. The object can be constructed given a 
+    a multiple sequence alignment. The object can be constructed given a
     list or other iterator of aligned sequences, or sequences can be gradually
     added using `add`.
 
     Args:
-        sequences: iterable str (expects equal sequence lengths, will fail
-            otherwise)
-        free_endgaps: If True, end gaps will not be taken into account when
-            forming the consensus. Note that if `end_gap_char` is different
+        sequences: iterable str
+            expects equal sequence lengths, will fail otherwise
+        free_endgaps: If True, end gaps will not be taken into account.
+            Note that if `end_gap_char` is different
             from `gap_char` and `free_endgaps` is not True, end gaps are
             converted to internal gaps.
             Either way, `end_gap_char` will never occur in the output.
@@ -126,18 +131,22 @@ class AlignmentFrequencies(object):
             alphabet and values being the letters they translate to.
             This can either be the same letter (unambiguous) or a sorted
             string of ambiguous letters.
-        gap_char: Gap character (default: '-')
-        end_gap_char: End gap character in the sequences (default: '-'). If
-            different from `gap_char`, it needs to be correctly specified.
+        gap_char: Gap character
+            (default: '-')
+        end_gap_char: End gap character in the sequences.
+            (default: '-').
+            If different from `gap_char`, it needs to be correctly specified.
             Otherwise, there will be an error.
     """
 
-    def __init__(self,
-                 sequences: Optional[Iterable[str]] = None,
-                 alphabet_map: Mapping[str, str] = IUPAC_map,
-                 free_endgaps: bool = True,
-                 gap_char: str = '-',
-                 end_gap_char: str = '-'):
+    def __init__(
+        self,
+        sequences: Optional[Iterable[str]] = None,
+        alphabet_map: Mapping[str, str] = IUPAC_map,
+        free_endgaps: bool = True,
+        gap_char: str = "-",
+        end_gap_char: str = "-",
+    ):
         self.alphabet_map = alphabet_map
         self.free_endgaps = free_endgaps
         self.gap_char = ord(gap_char)
@@ -151,18 +160,22 @@ class AlignmentFrequencies(object):
         self._freqs = None
         self._n = 0
         # initialize alphabet
-        gap_chars = [self.gap_char] if self.gap_char == self._end_gap_char\
+        gap_chars = (
+            [self.gap_char]
+            if self.gap_char == self._end_gap_char
             else [self.gap_char, self._end_gap_char]
+        )
         _alphabet = sorted(alphabet_map.items(), key=lambda item: len(item[1]))
-        self._alphabet_chars = np.array(bytearray(
-            [ord(k) for k, _ in _alphabet] + gap_chars
-        ))
-        self._non_ambig_i = [i for i, item in enumerate(_alphabet)
-                             if len(item[1]) == 1]
+        self._alphabet_chars = np.array(
+            bytearray([ord(k) for k, _ in _alphabet] + gap_chars)
+        )
+        self._non_ambig_i = [i for i, item in enumerate(_alphabet) if len(item[1]) == 1]
         # TODO: item[0] not strictly required
-        self._ambigs = [(i, item[0], item[1])
-                        for i, item in enumerate(_alphabet)
-                        if len(item[1]) > 1]
+        self._ambigs = [
+            (i, item[0], item[1])
+            for i, item in enumerate(_alphabet)
+            if len(item[1]) > 1
+        ]
         self._gap_i = len(_alphabet)
         # add sequences if supplied
         if sequences is not None:
@@ -174,12 +187,10 @@ class AlignmentFrequencies(object):
         self._freqs = np.zeros(m * n, dtype=np.uint64).reshape(m, n)
 
     def add(self, seq: str):
-        '''
-        Adds a sequence to the internal consensus matrix.
-        '''
+        """Adds a sequence to the internal consensus matrix."""
         # convert to bytearray
         if isinstance(seq, str):
-            seq = bytearray(seq, 'utf-8')
+            seq = bytearray(seq, "utf-8")
         else:
             seq = bytearray(seq)
         # to uppercase
@@ -191,84 +202,92 @@ class AlignmentFrequencies(object):
         # initialize consensus matrix if necessary
         if self._freqs is None:
             self._init_matrix(len(seq))
-        assert len(seq) == self._freqs.shape[1], \
-            'The input sequences do not all have a consistent length'
+        assert (
+            len(seq) == self._freqs.shape[1]
+        ), "The input sequences do not all have a consistent length"
 
         if self._convert:
-            _convert_endgaps(seq, gap_char=self.gap_char,
-                             end_gap_char=self._end_gap_char)
+            _convert_endgaps(
+                seq, gap_char=self.gap_char, end_gap_char=self._end_gap_char
+            )
 
         # add to consensus matrix
         idx = np.array(seq) == self._alphabet_chars[:, None]
         if not np.all(np.any(idx, axis=0)):
-            not_found = np.where(~ np.any(0))[0]
+            not_found = np.where(~np.any(0))[0]
             letters = np.unique(np.array(seq)[not_found])
             raise AlphabetLookupError([chr(letter) for letter in letters])
         self._freqs[idx] += 1
         self._n += 1
 
     def coverage(self) -> np.array:
-        '''
+        """
         Returns a numpy.array(dtype=numpy.float64) with the fraction of
         non-gap sequences at any position. Note that if the object was
         constructed with `free_endgaps`, terminal gaps will not count as gaps
         at all, potentially resulting in high coverage values.
-        '''
+        """
         matrix = self._normalize_endgaps(self._freqs)
-        nongaps = np.sum(matrix[np.arange(self._gap_i), ], axis=0)
-        gaps = matrix[self._gap_i, ]
+        nongaps = np.sum(
+            matrix[
+                np.arange(self._gap_i),
+            ],
+            axis=0,
+        )
+        gaps = matrix[
+            self._gap_i,
+        ]
         all = nongaps + gaps
-        cov = np.divide(nongaps, all,
-                        out=np.zeros(len(nongaps), dtype=np.float64),
-                        where=all != 0)
+        cov = np.divide(
+            nongaps, all, out=np.zeros(len(nongaps), dtype=np.float64), where=all != 0
+        )
         return cov
 
     def matrix(self) -> Tuple[str, np.array]:
-        '''
+        """
         Returns a tuple of the letters ("row names" in the matrix)
         and the corresponding letter frequencies at each position.
         this includes all ambiguous letters as well, even if their frequency
         is zero.
-        '''
-        letters = bytearray(self._alphabet_chars[:self._gap_i+1])\
-            .decode('utf-8')
+        """
+        letters = bytearray(self._alphabet_chars[: self._gap_i + 1]).decode("utf-8")
         matrix = self._normalize_endgaps(self._freqs)
         return letters, matrix
 
     def normalized_matrix(self) -> Tuple[str, np.array]:
-        '''
+        """
         Like `matrix`, but returns a reduced matrix with frequences from
         ambiguous letters added to the non-ambiguous letters and possible end
         gaps counts removed. This is the matrix ultimately used for calling the
         consensus.
-        '''
+        """
         matrix = self._normalize()
         chars = self._alphabet_chars[self._non_ambig_i + [self._gap_i]]
-        return bytearray(chars).decode('utf-8'), matrix
+        return bytearray(chars).decode("utf-8"), matrix
 
     def num_seqs(self) -> int:
-        '''
+        """
         Returns the number of added sequences
-        '''
+        """
         return self._n
 
     def _normalize(self):
-        '''
+        """
         "Normalizes" the consensus matrix by removing "free" end gaps
         (or merging counts from two different gap characters), and then
         distributing the frequencies of ambiguous letters to their equivalents.
         Returns the resulting matrix with irrelevant rows removed.
-        '''
+        """
         freqs = self._normalize_endgaps(self._freqs)
         return self._replace_ambigs(freqs)
 
     def _normalize_endgaps(self, matrix):
-        '''
+        """
         If `free_endgaps` was True, remove end gaps from the frequency matrix.
         Otherwise, convert them to internal gaps if they are different (since
         they are treated like internal gaps, and we don't want to have two
         different characters for them).
-        '''
+        """
         # TODO: may be called too often, maybe modify self._freqs instead
         if self.free_endgaps:
             # ignore end gaps completely
@@ -281,11 +300,11 @@ class AlignmentFrequencies(object):
         return matrix
 
     def _replace_ambigs(self, matrix):
-        '''
+        """
         Replace ambiguities by corresponding (fractional) letter frequencies.
         If ambiguities are present, this will convert the
         consensus matrix from numpy.uint64 to to numpy.float64.
-        '''
+        """
         if len(self._ambigs) > 0:
             # found ambiguities -> convert to float
             matrix = matrix.astype(np.float64)
@@ -301,58 +320,88 @@ class AlignmentFrequencies(object):
             matrix = np.delete(matrix, [i for i, _, _ in self._ambigs], axis=0)
         return matrix
 
-    def column_freqs(self)\
-            -> Iterable[Iterable[Tuple[str, Union[int, float]]]]:
+    def column_freqs(self) -> Iterable[Iterable[Tuple[str, int]]]:
+        """
+        Returns an iterator over all columns, whereby each element is again
+        an iterator over letters and frequencies.
+
+        Example:
+
+            >>> from seq_consensus import AlignmentFrequencies
+            >>> freqs = AlignmentFrequencies(['AG', 'AR'])
+            >>> for colfreq in freqs.column_freqs():
+            >>>     print(dict(colfreq))
+            {'A': 2}
+            {'G': 1, 'R': 1}
+        """
         return _column_freqs(*self.matrix())
 
-    def normalized_column_freqs(self)\
-            -> Iterable[Iterable[Tuple[str, Union[int, float]]]]:
+    def normalized_column_freqs(
+        self,
+    ) -> Iterable[Iterable[Tuple[str, Union[int, float]]]]:
+        """
+        Works the same as `column_freqs`, but letter frequencies for
+        ambiguities are split to the corresponding letters.
+
+        Example:
+
+            >>> from seq_consensus import AlignmentFrequencies
+            >>> freqs = AlignmentFrequencies(['AG', 'AR'])
+            >>> for colfreq in freqs.normalized_column_freqs():
+            >>>     print(dict(colfreq))
+            {'A': 2.0}
+            {'A': 0.5, 'G': 1.5}
+        """
         return _column_freqs(*self.normalized_matrix())
 
-    def consensus(self,
-                  threshold: float = 0,
-                  strip_gaps: bool = False,
-                  gap_char_out: str = '-',
-                  end_gap_char_out: str = '-',
-                  maybe_gap_char: str = '?'):
-        '''
+    def consensus(
+        self,
+        threshold: float = 0,
+        strip_gaps: bool = False,
+        gap_char_out: str = "-",
+        end_gap_char_out: str = "-",
+        maybe_gap_char: str = "?",
+    ):
+        """
         Calls the consensus sequence given the internal consensus matrix.
-        '''
+        """
         alphabet_inv = _invert_alphabet(self.alphabet_map)
         _gap_chars = [chr(self.gap_char)]
         column_freqs = (list(f) for f in self.normalized_column_freqs())
         cons_letters = (
-            _consensus_letter(freqs,
-                              inverse_alphabet=alphabet_inv,
-                              threshold=threshold,
-                              gap_chars=_gap_chars,
-                              maybe_gap_char=maybe_gap_char)
-            if len(freqs) > 0 else end_gap_char_out
+            _consensus_letter(
+                freqs,
+                inverse_alphabet=alphabet_inv,
+                threshold=threshold,
+                gap_chars=_gap_chars,
+                maybe_gap_char=maybe_gap_char,
+            )
+            if len(freqs) > 0
+            else end_gap_char_out
             for freqs in column_freqs
         )
         if strip_gaps:
-            cons_letters = (lt for lt in cons_letters
-                            if lt != self.gap_char and lt != end_gap_char_out)
+            cons_letters = (
+                lt
+                for lt in cons_letters
+                if lt != self.gap_char and lt != end_gap_char_out
+            )
         elif self.gap_char != gap_char_out:
             # convert gaps
-            cons_letters = (gap_char_out if letter == self.gap_char else letter
-                            for letter in cons_letters)
+            cons_letters = (
+                gap_char_out if letter == self.gap_char else letter
+                for letter in cons_letters
+            )
         # done
-        return ''.join(cons_letters)
+        return "".join(cons_letters)
 
 
-def _column_freqs(letters, matrix)\
-        -> Iterable[Iterable[Tuple[str, Union[int, float]]]]:
+def _column_freqs(letters, matrix) -> Iterable[Iterable[Tuple[str, Union[int, float]]]]:
     for freqs in matrix.T:
-        yield ((letter, freq)
-               for letter, freq in zip(letters, freqs)
-               if freq > 0)
+        yield ((letter, freq) for letter, freq in zip(letters, freqs) if freq > 0)
 
 
-def _convert_endgaps(
-        seq: np.array,
-        gap_char,
-        end_gap_char):
+def _convert_endgaps(seq: np.array, gap_char, end_gap_char):
     """
     Replaces terminal gaps by another character.
     The sequence is provided as numpy array.
@@ -360,7 +409,7 @@ def _convert_endgaps(
     i0 = np.argmax(seq != gap_char)
     i1 = len(seq) - np.argmax(seq[::-1] != gap_char) - 1
     seq[:i0] = end_gap_char
-    seq[i1 + 1:] = end_gap_char
+    seq[i1 + 1 :] = end_gap_char
 
 
 def _invert_alphabet(alphabet_map):
@@ -368,11 +417,12 @@ def _invert_alphabet(alphabet_map):
 
 
 def _consensus_letter(
-        letter_freqs: Iterable[Tuple[str, Union[float, int]]],
-        inverse_alphabet: Mapping[str, str],
-        threshold: float = 0.5,
-        gap_chars: Container[str] = ('-', '.'),
-        maybe_gap_char: str = '?') -> Optional[str]:
+    letter_freqs: Iterable[Tuple[str, Union[float, int]]],
+    inverse_alphabet: Mapping[str, str],
+    threshold: float = 0.5,
+    gap_chars: Container[str] = ("-", "."),
+    maybe_gap_char: str = "?",
+) -> Optional[str]:
     letter_freqs = ((lt, f) for lt, f in letter_freqs if f > 0)
     sorted_freqs = sorted(letter_freqs, key=lambda x: (-x[1], x[0]))
     freqsum = sum(freq for _, freq in sorted_freqs)
@@ -395,7 +445,7 @@ def _consensus_letter(
         return None
     if 0 < n_gapchars < len(letters):
         return maybe_gap_char
-    letters = ''.join(sorted(letters))
+    letters = "".join(sorted(letters))
     try:
         return inverse_alphabet[letters]
     except KeyError:
@@ -408,9 +458,11 @@ class AlphabetLookupError(Exception):
     def __init__(self, letters):
         self.letters = letters
         if len(letters) == 1:
-            m = "The letter '{}' is not in the ambiguity lookup dictionary."\
-                .format(letters)
+            m = "The letter '{}' is not in the ambiguity lookup dictionary.".format(
+                letters
+            )
         else:
-            m = "The letters '{}' are not in the ambiguity lookup dictionary."\
-                .format(letters)
+            m = "The letters '{}' are not in the ambiguity lookup dictionary.".format(
+                letters
+            )
         super().__init__(m)
