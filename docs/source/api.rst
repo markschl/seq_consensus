@@ -1,9 +1,5 @@
 API
 ===
 
-.. currentmodule:: seq_consensus
-
-.. autofunction:: consensus
-
-.. autoclass:: AlignmentFrequencies
+.. automodule:: seq_consensus
    :members:

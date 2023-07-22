@@ -1,7 +1,11 @@
 import unittest
 import numpy as np
 
-from seq_consensus.consensus import AlignmentFrequencies, _convert_endgaps, consensus
+from src.seq_consensus.consensus import (
+    AlignmentFrequencies,
+    _convert_endgaps,
+    consensus,
+)
 
 
 class TestAlignmentFuncs(unittest.TestCase):
