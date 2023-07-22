@@ -9,7 +9,7 @@ version = "0.1.0"
 authors = [
   { name = "Markus Schlegel", email = "markschl19@gmail.com" },
 ]
-license = { text = "MIT" }
+license = { file = "LICENSE" }
 readme = "README.md"
 classifiers = [
   "License :: OSI Approved :: MIT License",
